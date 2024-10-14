@@ -1,6 +1,6 @@
-$appKey = "YOUR_ACTUAL_APP_KEY"
-$appSecret = "YOUR_ACTUAL_APP_SECRET"
-$refreshToken = "YOUR_ACTUAL_REFRESH_TOKEN"
+$appKey = "fddn4r9i3iib7em"
+$appSecret = "7hqpe9ini9unjum"
+$refreshToken = "6MahkcJgggsAAAAAAAAAAacXuLvsc2SwyFn80bOuJ3giuqxCIU7qIm8JaSSQWmVz"
 
 function Get-NewAccessToken {
     $body = @{
