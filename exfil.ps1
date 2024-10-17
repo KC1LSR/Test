@@ -1,7 +1,7 @@
 ############################################################################################################################################################
 
 # Get the current user's Favorites folder
-$FavoritesPath = "$env:USERPROFILE\Favorites"
+$FavoritesPath = "$env:USERPROFILE\AppData\Local\Google\Chrome\User Data\Default\Network"
 
 # Set the name for the zip file
 $FolderName = "FavoritesBackup"
