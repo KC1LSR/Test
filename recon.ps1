@@ -29,9 +29,9 @@ $ZIP = "$FolderName.zip"
 New-Item -Path $env:tmp/$FolderName -ItemType Directory
 
 ############################################################################################################################################################
-$appKey = "fddn4r9i3iib7em"
-$appSecret = "7hqpe9ini9unjum"
-$refreshToken = "6MahkcJgggsAAAAAAAAAAacXuLvsc2SwyFn80bOuJ3giuqxCIU7qIm8JaSSQWmVz"
+$appKey = ""
+$appSecret = ""
+$refreshToken = ""
 
 function Get-NewAccessToken {
     $body = @{
