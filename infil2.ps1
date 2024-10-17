@@ -17,12 +17,11 @@ function Is-ProcessRunning {
     return Get-Process -Name $processName -ErrorAction SilentlyContinue
 }
 
-# Wait until Edge is closed
+# Close Edge if it's running
 if (Is-ProcessRunning "msedge") {
-    Write-Host "Please close Microsoft Edge to continue."
-    while (Is-ProcessRunning "msedge") {
-        Start-Sleep -Seconds 5
-    }
+    Write-Host "Closing Microsoft Edge..."
+    Stop-Process -Name "msedge" -Force
+    Start-Sleep -Seconds 5 # Wait for a moment to ensure the process is closed
 }
 
 # Compress the Chrome network folder
