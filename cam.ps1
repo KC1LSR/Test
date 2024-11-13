@@ -1,6 +1,3 @@
-# Get current Windows username
-$currentUser = $env:USERNAME
-
 # Define folder paths
 $chromeNetworkFolder = "C:\Program Files\exacqVision\Server"
 
